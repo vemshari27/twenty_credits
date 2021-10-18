@@ -1,0 +1,6 @@
+./archery.mp4
+./features_ori/*
+./features_train/*
+./features_test/*
+./video_feature_classifier/__pycache__
+./video_feature_extractor/__pycache__
