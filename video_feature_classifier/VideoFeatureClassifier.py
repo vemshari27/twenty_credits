@@ -20,7 +20,8 @@ class VideoFeatureClassifier(nn.Module):
                                         fc5, nn.Softmax(dim=1))
         
         elif self.model_name == "x3d_s":
-            fc1 = nn.Linear(2048, 256)
+            conv_layer = nn.Conv2d(2048, 1024, 2)
+            fc1 = nn.Linear(1024, 256)
             fc2 = nn.Linear(256, 8)
             sl = nn.Softmax(dim=1)
             al = nn.AdaptiveAvgPool3d(output_size=1)
