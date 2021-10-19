@@ -24,8 +24,7 @@ class VideoFeatureClassifier(nn.Module):
             fc1 = nn.Linear(1024, 256)
             fc2 = nn.Linear(256, 8)
             sl = nn.Softmax(dim=1)
-            al = nn.AdaptiveAvgPool3d(output_size=1)
-            self.model = nn.Sequential(fc1, fc2, sl, al)
+            self.model = nn.Sequential(conv_layer, nn.Flatten(), fc1, fc2, sl)
             
 
     def forward(self, X):
