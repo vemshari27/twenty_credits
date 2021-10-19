@@ -8,7 +8,9 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor
 
 class VideoFeatureDataset(Dataset):
-    def __init__(self, root):
+    def __init__(self, root, model_name="slowfast_r50"):
+        self.model_name = model_name
+        self.root = root
         self.sub_folder_info = [(root+'/'+i, len(os.listdir(root+'/'+i))) for i in os.listdir(root)]
         self.n = 0
         for i in self.sub_folder_info:
@@ -35,5 +37,8 @@ class VideoFeatureDataset(Dataset):
         # label[lbl] = 1
         # label = np.array([0])
         # label[0] = lbl
-        
-        return torch.Tensor(tmp[0]), lbl # torch.Tensor(label).long()
+
+        if self.model_name == "slowfast_r50":
+            return torch.Tensor(tmp[0]), lbl
+        elif self.model_name == "x3d_s":
+            return torch.Tensor(tmp[0,:,0,:,:]), lbl

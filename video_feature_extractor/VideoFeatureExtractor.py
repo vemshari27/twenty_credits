@@ -56,13 +56,6 @@ class VideoFeatureExtractor(torch.nn.Module):
 
         elif model_name == "x3d_s":
             self.model = torch.hub.load("facebookresearch/pytorchvideo:main", model_name, pretrained=True)
-            # self.model = torch.hub.load("../pytorchvideo", model=model_name, source="local")
-            # # checkpoint = torch.hub.load_state_dict("/home/srihari/udiva/personality_project/video_feature_extractor/models/X3D_S.pyth", map_location=device)
-
-            # # # Unwrap the DistributedDataParallel module
-            # # # module.layer -> layer
-            # # state_dict = checkpoint["model_state"]
-            # self.model.load_state_dict("/home/srihari/udiva/personality_project/video_feature_extractor/models/X3D_S.pyth")
 
             self.model = self.model.eval()
             self.model = self.model.to(device)
@@ -113,6 +106,22 @@ class VideoFeatureExtractor(torch.nn.Module):
             # The duration of the input clip is also specific to the model.
             self.clip_duration = (transform_params["num_frames"] * transform_params["sampling_rate"])/frames_per_second
         
+            # net1 = torch.nn.Sequential(*list(self.model.children())[0][:-1])
+            # net1 = list(self.model.children())[0][:-1]
+            # net2 = list(list(self.model.children())[0][-1].modules())[:-3]
+            # print(net1)
+            # print(net2)
+            # net1.extend(net2)
+            # print(len(net1))
+            # self.model = torch.nn.Sequential(*net1)
+            
+            print(list(self.model.children())[0][-1])
+            net1 = list(self.model.children())[0][:-1]
+            net2 = list(list(self.model.children())[0][-1].children())[:-3]
+            net1.extend(net2)
+            # print(net1)
+            self.model = torch.nn.Sequential(*net1)
+
         elif model_name == "slow_r50":
             self.model = torch.hub.load('facebookresearch/pytorchvideo:main', 'slow_r50', pretrained=True)
             self.model = self.model.eval()
@@ -144,7 +153,6 @@ class VideoFeatureExtractor(torch.nn.Module):
 
             # The duration of the input clip is also specific to the model.
             self.clip_duration = (num_frames * sampling_rate)/frames_per_second
-        # self.model = torch.nn.Sequential(*list(self.model.children())[-1])
         
     def forward(self, video_data):
         # Apply a transform to normalize the video input
@@ -152,10 +160,16 @@ class VideoFeatureExtractor(torch.nn.Module):
 
         # Move the inputs to the desired device
         inputs = video_data["video"]
-        inputs = [i.to(self.device)[None, ...] for i in inputs]
+        preds = None
+        if self.model_name == "slowfast_r50":
+            inputs = [i.to(self.device)[None, ...] for i in inputs]
+            # preds = self.net2(preds)
+        elif self.model_name == "x3d_s":
+            inputs.to(self.device)
+            preds = self.model(inputs[None, ...])
 
         # Pass the input clip through the model 
-        preds = self.model(inputs)
+
 
         return preds
 

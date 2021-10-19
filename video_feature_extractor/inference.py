@@ -79,12 +79,19 @@ def inference(opt, ):
         model = VideoFeatureExtractor(model_name, device=device)
         for sub_f in os.listdir(source):
             print("Entered sub folder:", sub_f)
+
+            if not os.path.isdir(output+'/'+sub_f):
+                os.mkdir(output+'/'+sub_f)
+
             for video_file in os.listdir(source+'/'+sub_f):
-                print("Processing video:", video_file)
-                video = EncodedVideo.from_path(source+'/'+sub_f+'/'+video_file)
-                video_data = video.get_clip(start_sec=0, end_sec=video.duration)
-                preds = model(video_data).cpu().detach().numpy()
-                np.save(source+'/'+sub_f+'/'+video_file[:-4]+".npy", preds)
+                if not os.path.isfile(output+'/'+sub_f+'/'+video_file[:-4]+".npy"):
+                    print("Processing video:", video_file)
+                    video = EncodedVideo.from_path(source+'/'+sub_f+'/'+video_file)
+                    video_data = video.get_clip(start_sec=0, end_sec=video.duration)
+                    preds = model(video_data).cpu().detach().numpy()
+                    np.save(output+'/'+sub_f+'/'+video_file[:-4]+".npy", preds)
+                else:
+                    print("Skipping video:", video_file)
         # for video_file in os.listdir(source):
         #     video = EncodedVideo.from_path(source+'/'+video_file)
         #     video_data = video.get_clip(start_sec=0, end_sec=video.duration)

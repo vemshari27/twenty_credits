@@ -14,7 +14,7 @@ from VideoFeatureClassifier import VideoFeatureClassifier
 from VideoFeatureDataset import VideoFeatureDataset
 
 def train(opt):
-    device, training_data, validation_data, output, workers, batch_size, num_epochs = opt.device, opt.training_data, opt.validation_data, opt.output, opt.workers, opt.batch_size, opt.num_epochs
+    device, model_name, training_data, validation_data, output, workers, batch_size, num_epochs = opt.device, opt.model_name, opt.training_data, opt.validation_data, opt.output, opt.workers, opt.batch_size, opt.num_epochs
 
     # creating output folder
     if not os.path.isdir(output):
@@ -24,8 +24,8 @@ def train(opt):
     # f = open("training_log.txt", "w")
 
     # creating dataloaders
-    trainset = VideoFeatureDataset(training_data)
-    testset = VideoFeatureDataset(validation_data)
+    trainset = VideoFeatureDataset(training_data, model_name)
+    testset = VideoFeatureDataset(validation_data, model_name)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size, num_workers=workers)
     testloader = torch.utils.data.DataLoader(testset, batch_size, num_workers=workers)
 
@@ -91,6 +91,7 @@ def train(opt):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", type=str, default="cpu")
+    parser.add_argument("--model_name", type=str, required=True)
     parser.add_argument("--training_data", type=str, required=True)
     parser.add_argument("--validation_data", type=str, required=True)
     parser.add_argument("--output", type=str, default="./output")
