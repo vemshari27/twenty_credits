@@ -30,7 +30,7 @@ def train(opt):
     testloader = torch.utils.data.DataLoader(testset, batch_size, num_workers=workers)
 
     # loading the model
-    model = VideoFeatureClassifier()
+    model = VideoFeatureClassifier(model_name)
     model.to(device)
     
     criterion = nn.CrossEntropyLoss()
