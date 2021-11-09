@@ -25,10 +25,11 @@ def train(opt):
     # f = open("training_log.txt", "w")
 
     # creating dataloaders
-    trainset = VideoDataset(training_data, model_name, device=device)
-    testset = VideoDataset(validation_data, model_name, device=device)
+    trainset = VideoDataset(training_data, model_name)
+    testset = VideoDataset(validation_data, model_name)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size, num_workers=workers)
     testloader = torch.utils.data.DataLoader(testset, batch_size, num_workers=workers)
+    print("Training", len(trainset), "videos")
 
     # instantiating tranformations
     transformer = VideoTransformer(model_name, device)

@@ -13,6 +13,11 @@ class VideoDataset(Dataset):
         self.root = root
         self.sub_folder_info = [(root+'/'+i, len(os.listdir(root+'/'+i))) for i in os.listdir(root)]
         self.n = 0
+        for i in self.sub_folder_info:
+            self.n += i[1]
+        self.cum_sum_arr = [i[1] for i in self.sub_folder_info]
+        for i in range(1,8):
+            self.cum_sum_arr[i] = self.cum_sum_arr[i]+self.cum_sum_arr[i-1]
     
     def __len__(self):
         return self.n

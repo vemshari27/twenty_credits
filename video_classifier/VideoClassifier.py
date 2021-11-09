@@ -13,13 +13,14 @@ class VideoClassifier(nn.Module):
             self.model = x3d.create_x3d(model_num_class=8)
 
     def forward(self, X):
+        print(X)
         # x = F.relu(self.fc1(X))
         # x = F.relu(self.fc2(x))
         # x = F.relu(self.fc3(x))
         # x = F.relu(self.fc4(x))
         # x = F.relu(self.fc5(x))
         # output = F.log_softmax(x, dim=1)
-        x = self.transformer(X)
+        x = self.transformer.transform(X)
 
         output = self.model(x)
         return output[0]
