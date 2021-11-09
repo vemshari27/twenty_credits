@@ -16,7 +16,7 @@ class VideoFeatureDataset(Dataset):
         for i in self.sub_folder_info:
             self.n += i[1]
         self.cum_sum_arr = [i[1] for i in self.sub_folder_info]
-        for i in range(1,3):
+        for i in range(1,8):
             self.cum_sum_arr[i] = self.cum_sum_arr[i]+self.cum_sum_arr[i-1]
     
     def __len__(self):

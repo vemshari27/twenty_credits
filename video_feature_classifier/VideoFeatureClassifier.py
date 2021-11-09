@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class VideoFeatureClassifier(nn.Module):
     def __init__(self, model_name="slowfast_r50"):
-        super().__init__()
+        super(VideoFeatureClassifier, self).__init__()
         self.model = None
         self.model_name = model_name
         if self.model_name == "slowfast_r50":
