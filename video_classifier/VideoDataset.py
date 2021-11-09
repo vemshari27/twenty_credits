@@ -21,7 +21,7 @@ from pytorchvideo.transforms import (
 
 from PackPathway import PackPathway
 
-class VideoFeatureDataset(Dataset):
+class VideoDataset(Dataset):
     def __init__(self, root, model_name="slowfast_r50", device="cpu"):
         self.model_name = model_name
         self.root = root
