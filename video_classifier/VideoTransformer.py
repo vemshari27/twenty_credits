@@ -65,10 +65,13 @@ class VideoTransformer:
 
             # The duration of the input clip is also specific to the model.
             clip_duration = (transform_params["num_frames"] * transform_params["sampling_rate"])/frames_per_second
-            video = EncodedVideo.from_path(X)
-            video_data = video.get_clip(start_sec=0, end_sec=video.duration)
-            video_data = transform(video_data)
-            inputs = video_data["video"]
-            inputs.to(self.device)
-            inputs = inputs[None, ...]
-            return inputs
+            input_batch = []
+            for video_path in X:
+                video = EncodedVideo.from_path(X)
+                video_data = video.get_clip(start_sec=0, end_sec=video.duration)
+                video_data = transform(video_data)
+                inputs = video_data["video"]
+                inputs.to(self.device)
+                inputs = inputs[None, ...]
+                input_batch.append(inputs[0])
+            return input_batch
