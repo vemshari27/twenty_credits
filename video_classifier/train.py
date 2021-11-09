@@ -12,6 +12,7 @@ import torch.optim as optim
 
 from VideoClassifier import VideoClassifier
 from VideoDataset import VideoDataset
+from VideoTransformer import VideoTransformer
 
 def train(opt):
     device, model_name, training_data, validation_data, output, workers, batch_size, num_epochs = opt.device, opt.model_name, opt.training_data, opt.validation_data, opt.output, opt.workers, opt.batch_size, opt.num_epochs
@@ -29,8 +30,11 @@ def train(opt):
     trainloader = torch.utils.data.DataLoader(trainset, batch_size, num_workers=workers)
     testloader = torch.utils.data.DataLoader(testset, batch_size, num_workers=workers)
 
+    # instantiating tranformations
+    transformer = VideoTransformer(model_name, device)
+
     # loading the model
-    model = VideoClassifier(model_name)
+    model = VideoClassifier(model_name, transformer)
     model.to(device)
     
     criterion = nn.CrossEntropyLoss()
@@ -43,7 +47,7 @@ def train(opt):
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
-            inputs = inputs.to(device)
+            # inputs = inputs.to(device)
             labels = labels.to(device)
 
             # zero the parameter gradients
@@ -68,7 +72,7 @@ def train(opt):
         with torch.no_grad():
             for data in testloader:
                 inputs, labels = data
-                inputs = inputs.to(device)
+                # inputs = inputs.to(device)
                 labels = labels.to(device)
                 # calculate outputs by running images through the network
                 outputs = model(inputs)
