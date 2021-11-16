@@ -5,3 +5,4 @@ features_test/*
 video_feature_classifier/__pycache__
 video_feature_extractor/__pycache__
 video_feature_classifier/output
+video_classifier/output
