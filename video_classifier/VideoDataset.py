@@ -124,15 +124,16 @@ class VideoDataset(Dataset):
         video_data = video.get_clip(start_sec=0, end_sec=video.duration)
         video_data = self.transform(video_data)
         inputs = video_data["video"]
-        inputs.to(self.device)
 
         # label = np.array([0,0,0,0,0,0,0,0], dtype="float32")
         # label[lbl] = 1
         # label = np.array([0])
         # label[0] = lbl
 
-        # if self.model_name == "slowfast_r50":
-        #     return torch.Tensor(tmp[0]), lbl
-        # elif self.model_name == "x3d_s":
-        #     return inputs[None, ...][0], lbl
-        return inputs[None, ...][0], lbl
+        if self.model_name == "slowfast_r50":
+            inputs = [i.to(self.device)[None, ...] for i in inputs]
+            return inputs, lbl
+        elif self.model_name == "x3d_s":
+            inputs.to(self.device)
+            return inputs[None, ...][0], lbl
+        # return inputs[None, ...][0], lbl
