@@ -21,6 +21,7 @@ class VideoClassifier(nn.Module):
         # x = F.relu(self.fc5(x))
         # output = F.log_softmax(x, dim=1)
         x = self.transformer.transform(X)
+#        print(x.shape)
 
         output = self.model(x)
         return output[0]

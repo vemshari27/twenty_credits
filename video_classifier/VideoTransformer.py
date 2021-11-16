@@ -67,7 +67,7 @@ class VideoTransformer:
             clip_duration = (transform_params["num_frames"] * transform_params["sampling_rate"])/frames_per_second
             input_batch = []
             for video_path in X:
-                video = EncodedVideo.from_path(X)
+                video = EncodedVideo.from_path(video_path)
                 video_data = video.get_clip(start_sec=0, end_sec=video.duration)
                 video_data = transform(video_data)
                 inputs = video_data["video"]
