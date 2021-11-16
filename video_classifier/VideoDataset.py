@@ -131,7 +131,7 @@ class VideoDataset(Dataset):
         # label[0] = lbl
 
         if self.model_name == "slowfast_r50":
-            inputs = [i.to(self.device)[None, ...] for i in inputs]
+            inputs = [i.to(self.device)[None, ...][0] for i in inputs]
             return inputs, lbl
         elif self.model_name == "x3d_s":
             inputs.to(self.device)
