@@ -80,6 +80,32 @@ class VideoDataset(Dataset):
 
             # The duration of the input clip is also specific to the model.
             self.clip_duration = (transform_params["num_frames"] * transform_params["sampling_rate"])/frames_per_second
+        
+        if model_name == "slowfast_r50":
+            side_size = 256
+            mean = [0.45, 0.45, 0.45]
+            std = [0.225, 0.225, 0.225]
+            crop_size = 256
+            num_frames = 32
+            sampling_rate = 2
+            frames_per_second = 30
+            
+            self.transform =  ApplyTransformToKey(
+                key="video",
+                transform=Compose(
+                    [
+                        UniformTemporalSubsample(num_frames),
+                        Lambda(lambda x: x/255.0),
+                        NormalizeVideo(mean, std),
+                        ShortSideScale(
+                            size=side_size
+                        ),
+                        CenterCropVideo(crop_size),
+                        PackPathway()
+                    ]
+                ),
+            )
+            self.clip_duration = (num_frames * sampling_rate)/frames_per_second
     
     def __len__(self):
         return self.n
@@ -105,7 +131,8 @@ class VideoDataset(Dataset):
         # label = np.array([0])
         # label[0] = lbl
 
-        if self.model_name == "slowfast_r50":
-            return torch.Tensor(tmp[0]), lbl
-        elif self.model_name == "x3d_s":
-            return inputs[None, ...][0], lbl
+        # if self.model_name == "slowfast_r50":
+        #     return torch.Tensor(tmp[0]), lbl
+        # elif self.model_name == "x3d_s":
+        #     return inputs[None, ...][0], lbl
+        return inputs[None, ...][0], lbl

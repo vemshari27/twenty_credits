@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from pytorchvideo.models import x3d
+from pytorchvideo.models import x3d, slowfast
 
 class VideoClassifier(nn.Module):
     def __init__(self, model_name="slowfast_r50"):
@@ -10,6 +10,8 @@ class VideoClassifier(nn.Module):
         self.model_name = model_name
         if self.model_name == "x3d_s":
             self.model = x3d.create_x3d(model_num_class=8)
+        if self.model_name == "slowfast_r50":
+            self.model = slowfast.create_slowfast(model_num_class=8)
 
         
     def forward(self, X):
