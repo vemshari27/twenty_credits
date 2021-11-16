@@ -46,7 +46,7 @@ def train(opt):
             print("Processing batch no.", i)
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
-            inputs = inputs.to(device)
+            # inputs = inputs.to(device)
             labels = labels.to(device)
 
             # zero the parameter gradients
@@ -71,7 +71,7 @@ def train(opt):
         with torch.no_grad():
             for data in testloader:
                 inputs, labels = data
-                inputs = inputs.to(device)
+                # inputs = inputs.to(device)
                 labels = labels.to(device)
                 # calculate outputs by running images through the network
                 outputs = model(inputs)
