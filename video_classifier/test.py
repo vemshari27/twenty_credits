@@ -14,7 +14,7 @@ from VideoClassifier import VideoClassifier
 from VideoDataset import VideoDataset
 
 def test(opt):
-    device, model_name, validation_data, output, workers, batch_size = opt.device, opt.model_name, opt.validation_data, opt.output, opt.workers, opt.batch_size
+    device, model_name, weights, validation_data, output, workers, batch_size = opt.device, opt.model_name, opt.weights, opt.validation_data, opt.output, opt.workers, opt.batch_size
 
     # creating output folder
     if not os.path.isdir(output):
@@ -28,6 +28,7 @@ def test(opt):
     # loading the model
     model = VideoClassifier(model_name)
     model.to(device)
+    model.load_state_dict(weights)
     
     # validation
     correct = 0
@@ -53,6 +54,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--model_name", type=str, required=True)
+    parser.add_argument("--weights", type=str, required=True)
     parser.add_argument("--validation_data", type=str, required=True)
     parser.add_argument("--output", type=str, default="./output")
     parser.add_argument("--workers", type=int, default=2)
